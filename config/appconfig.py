@@ -9,13 +9,6 @@ project_root = Path(__file__).resolve().parent.parent
 
 from qdrant_client import QdrantClient
 
-# qdrant_client = QdrantClient(
-#     url="https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333", 
-#     api_key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.W8FpW3L5iV93ZC3KHaEQ1fKXpmbExZAKVGvIJFqW7AA",
-# )
-
-# print(qdrant_client.get_collections())
-
 
 logging.basicConfig(
     level=logging.INFO,
