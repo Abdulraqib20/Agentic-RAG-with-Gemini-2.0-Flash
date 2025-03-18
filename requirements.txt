@@ -1,0 +1,9 @@
+streamlit==1.42.2
+google-generativeai==0.8.4
+qdrant_client==1.13.2
+agno==1.1.13
+exa==0.5.26
+qdrant-client==1.12.1
+langchain-qdrant==0.3.19
+langchain-community==0.3.19
+langchain==0.3.20
