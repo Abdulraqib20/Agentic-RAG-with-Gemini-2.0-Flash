@@ -4,6 +4,7 @@ from pathlib import Path
 import tempfile
 from datetime import datetime
 from typing import List
+import base64
 
 import streamlit as st
 import google.generativeai as genai
@@ -43,7 +44,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better UI
+
 st.markdown(""" 
 <style>
     .main-header {
@@ -225,7 +226,6 @@ st.sidebar.markdown("<div class='sidebar-header'>🌐 Web Search Settings</div>"
 st.session_state.use_web_search = st.sidebar.toggle("Enable Web Search Fallback", value=st.session_state.use_web_search)
 
 if st.session_state.use_web_search:
-    # Optional domain filtering
     default_domains = [
         "arxiv.org", 
         "wikipedia.org", 
@@ -290,6 +290,29 @@ def process_pdf(file) -> List:
         st.error(f"📄 PDF processing error: {str(e)}")
         return []
 
+def display_pdf(file_bytes: bytes, file_name: str):
+    """Displays the uploaded PDF preview in a styled sidebar container."""
+    base64_pdf = base64.b64encode(file_bytes).decode()
+    pdf_display = f"""
+    <div style="
+        width: 100%;
+        height: 80vh;
+        overflow: auto;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 0.5rem;
+        margin: 1rem 0;
+        box-sizing: border-box;
+        background-color: #fafafa;
+    ">
+        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">Preview: {file_name}</h3>
+        <iframe 
+            src="data:application/pdf;base64,{base64_pdf}" 
+            style="width: 100%; height: calc(100% - 2rem); border: none; border-radius: 4px;"
+        ></iframe>
+    </div>
+    """
+    st.sidebar.markdown(pdf_display, unsafe_allow_html=True)
 
 def process_web(url: str) -> List:
     """Process web URL and add source metadata."""
@@ -489,6 +512,7 @@ with tab2:
     
     with col1:
         if uploaded_file:
+            display_pdf(uploaded_file.getvalue(), uploaded_file.name)
             file_name = uploaded_file.name
             if st.button("Process PDF", key="process_pdf"):
                 if file_name not in st.session_state.processed_documents:
@@ -545,41 +569,7 @@ with tab2:
                     </div>
                     """, unsafe_allow_html=True)
 
-with tab1:
-    # # Display chat history
-    # st.markdown("<div class='sub-header'>💬 Chat History</div>", unsafe_allow_html=True)
-    
-    
-    # # Create a container for the chat history
-    # chat_container = st.container()
-    
-    # # Create a container for the input that will always be at the bottom
-    # input_container = st.container()
-    
-    # # Display chat history with proper styling in the chat container
-    # with chat_container:
-    #     for message in st.session_state.history:
-    #         with st.chat_message(message["role"]):
-    #             st.markdown(message["content"])
-    
-    # # Chat Interface in the input container (always at bottom)
-    # with input_container:
-    #     # Create two columns for chat input and search toggle
-    #     chat_col, toggle_col = st.columns([0.9, 0.1])
-        
-    #     with chat_col:
-    #         prompt = st.chat_input("Ask about your documents...")
-        
-    #     with toggle_col:
-    #         st.markdown("<br>", unsafe_allow_html=True)  # Add spacing
-    #         st.session_state.force_web_search = st.toggle('🌐', help="Force web search")
-    
-    # # Display chat history with proper styling
-    # for message in st.session_state.history:
-    #     with st.chat_message(message["role"]):
-    #         st.markdown(message["content"])
-    
-    
+with tab1:    
     # Create a layout with two main sections
     chat_area = st.container()
     input_area = st.container()
