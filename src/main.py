@@ -113,6 +113,14 @@ st.markdown("""
     .stButton>button:hover {
         background-color: #3730A3;
     }
+    .footer {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+        text-align: center;
+        color: #777;
+        font-size: 0.85rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -727,3 +735,9 @@ with tab1:
 
                 # st.error(f"❌ Error generating response: {str(e)}")
                 
+# Footer
+st.markdown("""
+<div class="footer">
+    <p>Built with ❤️ by raqibcodes</p>
+</div>
+""", unsafe_allow_html=True)
