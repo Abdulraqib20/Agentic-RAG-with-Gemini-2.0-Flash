@@ -9,20 +9,18 @@ An intelligent RAG system powered by Google's Gemini 2.0 Flash Thinking, Qdrant 
 - 🌐 Web Search Fallback
 
 ## 🛠️ Installation
-\`\`\`bash
+```bash
 git clone https://github.com/$GitHubUser/$RepoName.git
 cd $RepoName
 pip install -r requirements.txt
-\`\`\`
+```
 
 ## ⚙️ Configuration
-1. Create \`.env\` file with:
-\`\`\`ini
-QDRANT_URL="your-url"
-QDRANT_API_KEY="your-key"
-GOOGLE_API_KEY="google-key"
-EXAAI_API_KEY="exa-key"
-\`\`\`
+Create .env file with: <br>
+QDRANT_URL="your-url" <br>
+QDRANT_API_KEY="your-key" <br>
+GOOGLE_API_KEY="google-key" <br>
+EXAAI_API_KEY="exa-key" <br>
 
 ## 📧 Support
 Report issues at: https://github.com/$GitHubUser/$RepoName/issues
