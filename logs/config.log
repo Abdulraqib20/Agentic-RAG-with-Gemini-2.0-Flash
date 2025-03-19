@@ -337,3 +337,45 @@ requests.exceptions.ConnectionError: HTTPSConnectionPool(host='telemetry.crewai.
 2025-03-18 18:25:05,428 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
 2025-03-18 18:25:12,596 - google_genai.models - INFO - AFC remote call 1 is done.
 2025-03-18 18:25:14,450 - httpx - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-03-18 22:09:59,922 - httpx - INFO - HTTP Request: PUT https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno "HTTP/1.1 409 Conflict"
+2025-03-18 22:10:00,233 - httpx - INFO - HTTP Request: GET https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno "HTTP/1.1 200 OK"
+2025-03-18 22:10:13,825 - httpx - INFO - HTTP Request: PUT https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno/points?wait=true "HTTP/1.1 200 OK"
+2025-03-18 22:10:37,359 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-03-18 22:10:39,174 - google_genai.models - INFO - AFC remote call 1 is done.
+2025-03-18 22:10:45,170 - httpx - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-03-18 22:10:46,896 - httpx - INFO - HTTP Request: POST https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno/points/query "HTTP/1.1 200 OK"
+2025-03-18 22:10:46,912 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-03-18 22:10:51,742 - google_genai.models - INFO - AFC remote call 1 is done.
+2025-03-18 22:10:54,843 - httpx - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-03-18 22:13:12,729 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-03-18 22:13:14,452 - google_genai.models - INFO - AFC remote call 1 is done.
+2025-03-18 22:13:16,576 - httpx - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-03-18 22:13:19,750 - httpx - INFO - HTTP Request: POST https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno/points/query "HTTP/1.1 200 OK"
+2025-03-18 22:13:19,765 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-03-18 22:13:22,843 - google_genai.models - INFO - AFC remote call 1 is done.
+2025-03-18 22:13:24,714 - httpx - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-03-18 22:17:13,277 - httpx - INFO - HTTP Request: POST https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno/points/delete?wait=true "HTTP/1.1 200 OK"
+2025-03-18 22:18:12,772 - httpx - INFO - HTTP Request: PUT https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno "HTTP/1.1 409 Conflict"
+2025-03-18 22:18:13,079 - httpx - INFO - HTTP Request: GET https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno "HTTP/1.1 200 OK"
+2025-03-18 22:18:23,392 - httpx - INFO - HTTP Request: PUT https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno/points?wait=true "HTTP/1.1 200 OK"
+2025-03-18 22:20:17,464 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-03-18 22:20:23,782 - google_genai.models - INFO - AFC remote call 1 is done.
+2025-03-18 22:20:27,982 - httpx - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-03-18 22:20:30,128 - httpx - INFO - HTTP Request: POST https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno/points/query "HTTP/1.1 200 OK"
+2025-03-18 22:20:30,140 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-03-18 22:20:33,884 - google_genai.models - INFO - AFC remote call 1 is done.
+2025-03-18 22:20:35,928 - httpx - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-03-18 22:27:40,715 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-03-18 22:27:42,723 - google_genai.models - INFO - AFC remote call 1 is done.
+2025-03-18 22:27:45,592 - httpx - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-03-18 22:27:49,425 - httpx - INFO - HTTP Request: POST https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno/points/query "HTTP/1.1 200 OK"
+2025-03-18 22:27:49,436 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-03-18 22:27:52,237 - google_genai.models - INFO - AFC remote call 1 is done.
+2025-03-18 22:27:54,626 - httpx - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-03-18 22:29:42,274 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-03-18 22:29:46,982 - google_genai.models - INFO - AFC remote call 1 is done.
+2025-03-18 22:29:49,313 - httpx - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-03-18 22:29:51,139 - httpx - INFO - HTTP Request: POST https://c1733a44-5b62-43b6-ac36-8e802040a9aa.us-east4-0.gcp.cloud.qdrant.io:6333/collections/gemini-thinking-agent-agno/points/query "HTTP/1.1 200 OK"
+2025-03-18 22:29:51,152 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-03-18 22:29:57,074 - google_genai.models - INFO - AFC remote call 1 is done.
+2025-03-18 22:29:59,125 - httpx - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
