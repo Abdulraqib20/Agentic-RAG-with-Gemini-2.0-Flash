@@ -490,6 +490,36 @@ def check_document_relevance(query: str, vector_store, threshold: float = 0.7) -
     return bool(docs), docs
 
 
+from qdrant_client import models
+def delete_qdrant_records():
+    """Delete all records in the Qdrant collection"""
+    try:
+        client = init_qdrant()
+        if client:
+            # Delete all points in the collection
+            client.delete(
+                collection_name=COLLECTION_NAME,
+                points_selector=models.FilterSelector(
+                    filter=models.Filter()
+                )
+            )
+            st.success("🗑️ Successfully deleted all vectors from Qdrant!")
+            return True
+    except Exception as e:
+        st.error(f"❌ Error deleting records: {str(e)}")
+        return False
+
+# Add this in your sidebar configuration section
+st.sidebar.markdown("<div class='sidebar-header'>⚙️ Database Management</div>", unsafe_allow_html=True)
+if st.sidebar.button("🧹 Clear Vector Database", help="Danger! Deletes all stored vectors"):
+    if delete_qdrant_records():
+        # Reset local state
+        st.session_state.vector_store = None
+        st.session_state.processed_documents = []
+        update_persistent_state()
+        st.rerun()
+
+
 # Main Application Flow
 genai.configure(api_key=GOOGLE_API_KEY)
 qdrant_client = init_qdrant()
@@ -593,6 +623,10 @@ with tab1:
         with toggle_col:
             st.markdown("<br>", unsafe_allow_html=True)  # Add spacing
             st.session_state.force_web_search = st.toggle('🌐', help="Force web search")
+            
+    # For custom images
+    USER_AVATAR = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+    AI_AVATAR = "https://cdn-icons-png.flaticon.com/512/4712/4712035.png"
     
     # Then render the chat history above
     with chat_area:
@@ -607,7 +641,8 @@ with tab1:
     if prompt:
         # Add user message to history
         st.session_state.history.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
+        # avatar = "🤖" if message["role"] == "assistant" else "👤"
+        with st.chat_message("user", avatar=USER_AVATAR):
             st.write(prompt)
 
         # Step 1: Rewrite the query for better retrieval
@@ -630,7 +665,7 @@ with tab1:
                     "role": "assistant",
                     "content": error_message
                 })
-                with st.chat_message("assistant"):
+                with st.chat_message("assistant", avatar=AI_AVATAR):
                     st.write(error_message)
                 
                 st.error(f"❌ Error rewriting query: {str(e)}")
