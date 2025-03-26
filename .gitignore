@@ -36,7 +36,7 @@ env/
 *.sublime-*
 
 # Logs and databases
-# *.log
+*.log
 *.sqlite
 *.db
 
