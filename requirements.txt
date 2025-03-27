@@ -1,5 +1,5 @@
 streamlit==1.42.2
-google-generativeai
+google-genai
 qdrant_client
 agno
 exa
