@@ -6,3 +6,4 @@ exa
 langchain-qdrant
 langchain-community
 langchain
+beautifulsoup4
