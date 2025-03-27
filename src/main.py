@@ -149,7 +149,7 @@ class GeminiEmbedder(Embeddings):
 #--------------------------------------
 # Streamlit App Initialization
 #--------------------------------------
-st.markdown("<div class='main-header'>📃-🌐 Intelligent Agentic RAG System</div>", unsafe_allow_html=True)
+st.markdown("<div class='main-header'>📃&🌐 Intelligent Agentic RAG System</div>", unsafe_allow_html=True)
 st.markdown("""
 <div class='card'>
     <p>An intelligent RAG system powered by Google's Gemini 2.0 Flash Thinking, Qdrant vector storage, and Agno agent orchestration.</p>
