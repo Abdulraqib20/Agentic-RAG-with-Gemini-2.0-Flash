@@ -22,11 +22,10 @@ from agno.tools.exa import ExaTools
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(str(Path(__file__).parent.parent.resolve()))
 
-from config.appconfig import (
+from config.appconfig_cloud import (
     QDRANT_LOCATION,
     QDRANT_URL,
     QDRANT_API_KEY,
-    GROQ_API_KEY,
     GOOGLE_API_KEY,
     EXAAI_API_KEY
 )
