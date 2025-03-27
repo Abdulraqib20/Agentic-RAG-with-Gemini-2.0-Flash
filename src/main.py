@@ -36,6 +36,10 @@ COLLECTION_NAME = "gemini-thinking-agent-agno"
 GEMINI_EMBEDDING_MODEL = "models/text-embedding-004"
 # GEMINI_MODEL = "gemini/gemini-2.0-flash"
 GEMINI_MODEL = "gemini-2.5-pro-exp-03-25"
+# For custom images
+USER_AVATAR = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+AI_AVATAR = "https://cdn-icons-png.flaticon.com/512/4712/4712035.png"
+
 
 # Set page configuration
 st.set_page_config(
@@ -145,7 +149,7 @@ class GeminiEmbedder(Embeddings):
 #--------------------------------------
 # Streamlit App Initialization
 #--------------------------------------
-st.markdown("<div class='main-header'>👨‍💻 Intelligent Agentic RAG System</div>", unsafe_allow_html=True)
+st.markdown("<div class='main-header'>📃-🌐 Intelligent Agentic RAG System</div>", unsafe_allow_html=True)
 st.markdown("""
 <div class='card'>
     <p>An intelligent RAG system powered by Google's Gemini 2.0 Flash Thinking, Qdrant vector storage, and Agno agent orchestration.</p>
@@ -541,11 +545,6 @@ if st.sidebar.button("🧹 Clear Vector Database", help="Danger! Deletes all sto
 genai.configure(api_key=GOOGLE_API_KEY)
 qdrant_client = init_qdrant()
 
-# For custom images
-USER_AVATAR = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-AI_AVATAR = "https://cdn-icons-png.flaticon.com/512/4712/4712035.png"
-
-
 # Create tabs for a better organization
 tab1, tab2 = st.tabs(["💬 Chat", "📁 Data Upload"])
 
@@ -633,15 +632,13 @@ with tab1:
     # Create a container for the entire chat interface
     chat_container = st.container()
     
-    # Create a container for the chat history that will scroll
     with chat_container:
-        # Add a container for the chat history with max height
         st.markdown("""
             <style>
             .chat-history-container {
-                height: calc(100vh - 200px);
+                height: 5px;
                 overflow-y: auto;
-                padding-bottom: 100px;
+                padding-bottom: 10px;
             }
             .sub-header {
                 margin-bottom: 0.5rem !important;
@@ -652,7 +649,7 @@ with tab1:
         # Chat history section
         with st.container():
             st.markdown("<div class='sub-header'>💬 Chat History</div>", unsafe_allow_html=True)
-            # st.markdown('<div class="chat-history-container">', unsafe_allow_html=True)
+            st.markdown('<div class="chat-history-container">', unsafe_allow_html=True)
             
             # Display chat history with proper styling
             for message in st.session_state.history:
