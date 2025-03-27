@@ -3,6 +3,7 @@ google-genai
 qdrant_client
 agno
 exa
+exa_py
 langchain-qdrant
 langchain-community
 langchain
