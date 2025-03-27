@@ -14,7 +14,7 @@ from agno.models.google import Gemini
 from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_qdrant import QdrantVectorStore
-from qdrant_client import QdrantClient
+from qdrant_client import QdrantClient, models
 from qdrant_client.models import Distance, VectorParams
 from langchain_core.embeddings import Embeddings
 from agno.tools.exa import ExaTools
@@ -34,7 +34,8 @@ from config.appconfig import (
 # Constants
 COLLECTION_NAME = "gemini-thinking-agent-agno"
 GEMINI_EMBEDDING_MODEL = "models/text-embedding-004"
-GEMINI_MODEL = "gemini/gemini-2.0-flash"
+# GEMINI_MODEL = "gemini/gemini-2.0-flash"
+GEMINI_MODEL = "gemini-2.5-pro-exp-03-25"
 
 # Set page configuration
 st.set_page_config(
@@ -50,7 +51,7 @@ st.markdown("""
     .main-header {
         font-size: 2.5rem;
         font-weight: 700;
-        color: #4B3FFF;
+        # color: #4B3FFF;
         margin-bottom: 1rem;
     }
     .sub-header {
@@ -62,18 +63,19 @@ st.markdown("""
     .sidebar-header {
         font-size: 1.2rem;
         font-weight: 600;
-        color: #4B3FFF;
+        color: #6C5CE7;
         margin-top: 1rem;
     }
     .card {
         padding: 1rem;
         border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         margin-bottom: 1rem;
-        background-color: #f8f9fa;
+        background-color: #6C5CE7;
+        color: white;
     }
     .metric-card {
-        background-color: #4B3FFF;
+        background-color: #6C5CE7;
         color: white;
         border-radius: 8px;
         text-align: center;
@@ -96,19 +98,21 @@ st.markdown("""
         padding: 0.5rem;
         border-radius: 5px;
         margin-bottom: 0.5rem;
-        background-color: #f1f3f9;
-        border-left: 3px solid #6C63FF;
+        color: white;
+        background-color: #6C5CE7;
+        # background-color: #f1f3f9;
     }
     .expander-header {
         font-weight: 600;
         color: #4B3FFF;
     }
     .stButton>button {
-        background-color: #4B3FFF;
+        # background-color: #4B3FFF;
         color: white;
         border-radius: 5px;
         border: none;
         padding: 0.5rem 1rem;
+        background-color: #6C5CE7;
     }
     .stButton>button:hover {
         background-color: #3730A3;
@@ -116,9 +120,7 @@ st.markdown("""
     .footer {
         margin-top: 2rem;
         padding-top: 1rem;
-        border-top: 1px solid #eee;
         text-align: center;
-        color: #777;
         font-size: 0.85rem;
     }
 </style>
@@ -143,7 +145,7 @@ class GeminiEmbedder(Embeddings):
 #--------------------------------------
 # Streamlit App Initialization
 #--------------------------------------
-st.markdown("<div class='main-header'>👨‍💻 Agentic RAG with Gemini 2.0 Flash</div>", unsafe_allow_html=True)
+st.markdown("<div class='main-header'>👨‍💻 Intelligent Agentic RAG System</div>", unsafe_allow_html=True)
 st.markdown("""
 <div class='card'>
     <p>An intelligent RAG system powered by Google's Gemini 2.0 Flash Thinking, Qdrant vector storage, and Agno agent orchestration.</p>
@@ -325,15 +327,24 @@ def display_pdf(file_bytes: bytes, file_name: str):
 def process_web(url: str) -> List:
     """Process web URL and add source metadata."""
     try:
+        # First try without any class filtering
         loader = WebBaseLoader(
             web_paths=(url,),
             bs_kwargs=dict(
-                parse_only=bs4.SoupStrainer(
-                    class_=("post-content", "post-title", "post-header", "content", "main")
-                )
+                parse_only=bs4.SoupStrainer(['article', 'main', 'div', 'section'])
             )
         )
         documents = loader.load()
+        
+        if not documents:
+            st.warning("⚠️ No content found with default parsing. Trying alternative method...")
+            # Try again with no filtering
+            loader = WebBaseLoader(web_paths=(url,))
+            documents = loader.load()
+        
+        if not documents:
+            st.error("❌ Could not extract any content from the webpage. Please check if the URL is accessible and contains text content.")
+            return []
         
         # Add source metadata
         for doc in documents:
@@ -347,7 +358,14 @@ def process_web(url: str) -> List:
             chunk_size=1000,
             chunk_overlap=200
         )
-        return text_splitter.split_documents(documents)
+        chunks = text_splitter.split_documents(documents)
+        
+        if not chunks:
+            st.warning("⚠️ Content was extracted but no chunks were created. This might mean the content is too short or not properly formatted.")
+            return []
+            
+        return chunks
+        
     except Exception as e:
         st.error(f"🌐 Web processing error: {str(e)}")
         return []
@@ -490,7 +508,6 @@ def check_document_relevance(query: str, vector_store, threshold: float = 0.7) -
     return bool(docs), docs
 
 
-from qdrant_client import models
 def delete_qdrant_records():
     """Delete all records in the Qdrant collection"""
     try:
@@ -524,6 +541,11 @@ if st.sidebar.button("🧹 Clear Vector Database", help="Danger! Deletes all sto
 genai.configure(api_key=GOOGLE_API_KEY)
 qdrant_client = init_qdrant()
 
+# For custom images
+USER_AVATAR = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+AI_AVATAR = "https://cdn-icons-png.flaticon.com/512/4712/4712035.png"
+
+
 # Create tabs for a better organization
 tab1, tab2 = st.tabs(["💬 Chat", "📁 Data Upload"])
 
@@ -542,7 +564,7 @@ with tab2:
     with col2:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
         st.markdown("### 🌐 Web Page Import")
-        web_url = st.text_input("Enter Website URL", placeholder="https://raqibcodes.netlify.app/")
+        web_url = st.text_input("Enter Website URL", placeholder="https://github.com/Abdulraqib20?tab=repositories")
         st.markdown("</div>", unsafe_allow_html=True)
     
     # Process documents
@@ -608,12 +630,57 @@ with tab2:
                     """, unsafe_allow_html=True)
 
 with tab1:    
-    # Create a layout with two main sections
-    chat_area = st.container()
-    input_area = st.container()
+    # Create a container for the entire chat interface
+    chat_container = st.container()
     
-    # First put the input area at the bottom
-    with input_area:
+    # Create a container for the chat history that will scroll
+    with chat_container:
+        # Add a container for the chat history with max height
+        st.markdown("""
+            <style>
+            .chat-history-container {
+                height: calc(100vh - 200px);
+                overflow-y: auto;
+                padding-bottom: 100px;
+            }
+            .sub-header {
+                margin-bottom: 0.5rem !important;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+        
+        # Chat history section
+        with st.container():
+            st.markdown("<div class='sub-header'>💬 Chat History</div>", unsafe_allow_html=True)
+            # st.markdown('<div class="chat-history-container">', unsafe_allow_html=True)
+            
+            # Display chat history with proper styling
+            for message in st.session_state.history:
+                with st.chat_message(message["role"]):
+                    st.markdown(message["content"])
+            
+            st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Create a fixed input area at the bottom
+    st.markdown("""
+        <style>
+        .chat-input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            # background: white;
+            padding: 0.5rem;
+            z-index: 1000;
+            # border-top: 1px solid #e0e0e0;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    # Input area
+    with st.container():
+        st.markdown('<div class="chat-input-container">', unsafe_allow_html=True)
+        
         # Create two columns for chat input and search toggle
         chat_col, toggle_col = st.columns([0.9, 0.1])
         
@@ -624,19 +691,7 @@ with tab1:
             st.markdown("<br>", unsafe_allow_html=True)  # Add spacing
             st.session_state.force_web_search = st.toggle('🌐', help="Force web search")
             
-    # For custom images
-    USER_AVATAR = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-    AI_AVATAR = "https://cdn-icons-png.flaticon.com/512/4712/4712035.png"
-    
-    # Then render the chat history above
-    with chat_area:
-        st.markdown("<div class='sub-header'>💬 Chat History</div>", unsafe_allow_html=True)
-        
-        # Display chat history with proper styling
-        for message in st.session_state.history:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
-            
+        st.markdown('</div>', unsafe_allow_html=True)
 
     if prompt:
         # Add user message to history
@@ -647,6 +702,7 @@ with tab1:
 
         # Step 1: Rewrite the query for better retrieval
         with st.spinner("🤔 Reformulating query..."):
+            rewritten_query = prompt 
             try:
                 query_rewriter = get_query_rewriter_agent()
                 rewritten_query = query_rewriter.run(prompt).content
@@ -658,18 +714,9 @@ with tab1:
                         <strong>Rewritten:</strong> {rewritten_query}
                     </div>
                     """, unsafe_allow_html=True)
-            except Exception as e:
-                
-                error_message = "Apologies, I encountered an issue processing your request. Please try rephrasing or ask about another topic."
-                st.session_state.history.append({
-                    "role": "assistant",
-                    "content": error_message
-                })
-                with st.chat_message("assistant", avatar=AI_AVATAR):
-                    st.write(error_message)
-                
-                st.error(f"❌ Error rewriting query: {str(e)}")
-                rewritten_query = prompt
+            except Exception:
+                # Silently fall back to original query without showing error
+                pass
 
         # Step 2: Choose search strategy based on force_web_search toggle
         context = ""
@@ -685,8 +732,16 @@ with tab1:
             )
             docs = retriever.invoke(rewritten_query)
             if docs:
+                
+                # Add debug logging
+                # st.write(f"Debug: Found {len(docs)} documents")
+                
+                # for i, doc in enumerate(docs):
+                #     st.write(f"Debug: Document {i+1} source type: {doc.metadata.get('source_type')}")
+                
                 context = "\n\n".join([d.page_content for d in docs])
-                st.info(f"📊 Found {len(docs)} relevant documents (similarity > {st.session_state.similarity_threshold})")
+                # st.info(f"📊 Found {len(docs)} relevant documents (similarity > {st.session_state.similarity_threshold})")
+                st.info(f"📊 Found {len(docs)} relevant documents")
             elif st.session_state.use_web_search:
                 st.info("🔄 No relevant documents found in database, falling back to web search...")
 
@@ -733,7 +788,7 @@ with tab1:
                 update_persistent_state()
                 
                 # Display assistant response
-                with st.chat_message("assistant"):
+                with st.chat_message("assistant", avatar=AI_AVATAR):
                     st.write(response.content)
                     
                     # Show sources if available
@@ -743,6 +798,7 @@ with tab1:
                                 source_type = doc.metadata.get("source_type", "unknown")
                                 source_icon = "📄" if source_type == "pdf" else "🌐"
                                 source_name = doc.metadata.get("file_name" if source_type == "pdf" else "url", "unknown")
+                                # source_name = doc.metadata.get("file_name", doc.metadata.get("url", "unknown"))
                                 st.markdown(f"""
                                 <div class='source-card'>
                                     <strong>{source_icon} Source {i} from {source_name}:</strong><br/>
@@ -764,14 +820,14 @@ with tab1:
                 update_persistent_state()
                 
                 # Display the friendly message
-                with st.chat_message("assistant"):
+                with st.chat_message("assistant", avatar=AI_AVATAR):
                     st.write(friendly_message)
 
 
                 # st.error(f"❌ Error generating response: {str(e)}")
                 
 # Footer
-st.markdown("""
+st.sidebar.markdown("""
 <div class="footer">
     <p>Built with ❤️ by raqibcodes</p>
 </div>
