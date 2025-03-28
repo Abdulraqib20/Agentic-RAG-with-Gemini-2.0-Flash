@@ -8,3 +8,4 @@ langchain-qdrant
 langchain-community
 langchain
 beautifulsoup4
+pypdf
